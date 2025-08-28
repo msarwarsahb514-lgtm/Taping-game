@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typing Game</title>
+<style>
+  body {
+    margin: 0; padding: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    color: white;
+  }
+  header, footer {
+    background: rgba(0,0,0,0.7);
+    padding: 10px;
+  }
+  #game {
+    margin-top: 20px;
+    font-size: 48px;
+    font-weight: bold;
+  }
+  #inputBox {
+    font-size: 28px;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: none;
+    text-align: center;
+  }
+  #status { margin-top: 20px; font-size: 20px; }
+  .wrong { color: red; }
+  .correct { color: lime; }
+  #ad-top, #ad-bottom {
+    background: #222;
+    color: yellow;
+    padding: 10px;
+    margin: 5px 0;
+  }
+  #startAd {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.9);
+    color: white;
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column;
+    font-size:22px;
+    z-index:1000;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h2>Typing Game 🎮</h2>
+  <p>Coins: <span id="coins">0</span> | Balance: Rs <span id="balance">0</span> | Level: <span id="level">1</span></p>
+</header>
+
+<div id="ad-top">
+  <!-- Real Ad Script -->
+  <script async="async" data-cfasync="false" src="//pl27497601.profitableratecpm.com/ccc530734249c3c96d7ce3436b1ddb79/invoke.js"></script>
+  <div id="container-ccc530734249c3c96d7ce3436b1ddb79"></div>
+</div>
+
+<div id="game">Press Start to Play</div>
+<input type="text" id="inputBox" disabled placeholder="Type here..." maxlength="1">
+<div id="status"></div>
+
+<div id="ad-bottom">
+  <!-- Real Ad Script -->
+  <script async="async" data-cfasync="false" src="//pl27497601.profitableratecpm.com/ccc530734249c3c96d7ce3436b1ddb79/invoke.js"></script>
+  <div id="container-ccc530734249c3c96d7ce3436b1ddb79"></div>
+</div>
+
+<footer>
+  <label>🎵 Background Music: <input type="file" id="musicUpload" accept="audio/*"></label>
+  <audio id="bgMusic" loop></audio>
+</footer>
+
+<!-- Start Ad -->
+<div id="startAd">
+  <p>Ad is showing... ⏳</p>
+  <p>(Game will start in 5 seconds)</p>
+</div>
+
+<script>
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+let currentIndex = 0;
+let coins = parseInt(localStorage.getItem("coins") || 0);
+let balance = parseInt(localStorage.getItem("balance") || 0);
+let level = parseInt(localStorage.getItem("level") || 1);
+
+const game = document.getElementById("game");
+const inputBox = document.getElementById("inputBox");
+const statusDiv = document.getElementById("status");
+const coinsSpan = document.getElementById("coins");
+const balanceSpan = document.getElementById("balance");
+const levelSpan = document.getElementById("level");
+const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+
+coinsSpan.textContent = coins;
+balanceSpan.textContent = balance;
+levelSpan.textContent = level;
+
+// Start Ad Timer
+setTimeout(() => {
+  document.getElementById("startAd").style.display="none";
+  startGame();
+}, 5000);
+
+function startGame(){
+  currentIndex = 0;
+  game.textContent = letters[currentIndex];
+  inputBox.disabled = false;
+  inputBox.focus();
+}
+
+inputBox.addEventListener("input", () => {
+  let typed = inputBox.value.toUpperCase();
+  if(typed === letters[currentIndex]){
+    statusDiv.textContent = "✔ Correct";
+    statusDiv.className = "correct";
+    coins += 2;
+    if(coins >= 100){
+      balance += Math.floor(coins/100);
+      coins = coins % 100;
+    }
+    if(balance >= 300){
+      alert("🎉 Rs 300 reached! You can withdraw via JazzCash!");
+      balance -= 300;
+    }
+    // Level Up after every 26 letters
+    if(currentIndex >= letters.length-1){
+      level++;
+      currentIndex = -1;
+      alert("Level Up! 🎉 Now Level " + level);
+    }
+    currentIndex++;
+    game.textContent = letters[currentIndex] || "Well Done!";
+    saveProgress();
+  } else {
+    statusDiv.textContent = "❌ Wrong! Try again";
+    statusDiv.className = "wrong";
+    beep.play();
+  }
+  inputBox.value="";
+});
+
+function saveProgress(){
+  localStorage.setItem("coins", coins);
+  localStorage.setItem("balance", balance);
+  localStorage.setItem("level", level);
+  coinsSpan.textContent = coins;
+  balanceSpan.textContent = balance;
+  levelSpan.textContent = level;
+}
+
+// Background Music
+document.getElementById("musicUpload").addEventListener("change", (e)=>{
+  const file = e.target.files[0];
+  if(file){
+    const url = URL.createObjectURL(file);
+    const bgMusic = document.getElementById("bgMusic");
+    bgMusic.src = url;
+    bgMusic.play();
+  }
+});
+</script>
+</body>
+</html>
